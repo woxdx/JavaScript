@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>끝말잇기</title>
+</head>
+<body>
+    <div><span id="order">1</span>번째 참가자</div>
+    <div>제시어 : <span id="word"></span></div>
+    <input type="text" />
+    <button>입력</button>
+    <script>
+        let number;
+        while (true) {
+            number = Number(prompt("참가자는 몇 명인가요?"));
+            if (Number.isInteger(number) && number > 0) {
+                break;
+            }
+            alert("올바른 참가자 수를 입력하세요.");
+        }
+
+        const $input = document.querySelector("input");
+        const $button = document.querySelector("button");
+        const $word = document.querySelector("#word");
+        const $order = document.querySelector("#order");
+
+        let newWord; // 사용자가 방금 입력한 단어
+        let word; // 제시어
+
+        const onInput = (event) => {
+            newWord = event.target.value;
+        };
+
+        const onclickButton = () => {
+            if (newWord.length !== 3) {
+                alert("세 글자 단어를 입력하세요!");
+                $input.value = '';
+                $input.focus();
+                return;
+            }
+
+            if (!word || (word.at(-1) === newWord[0])) { // 제시어가 비어있다면 -> 첫 번째
+                word = newWord;
+                $word.textContent = word;
+                const order = Number($order.textContent);
+                if (order + 1 > number) {
+                    $order.textContent = 1; // 마지막 번호 참가자
+                } else {
+                    $order.textContent = order + 1;
+                }
+            } else { // 제시어에 뭔가 있다면 -> n 번째
+                alert("틀린 단어입니다!");
+            }
+            $input.value = '';
+            $input.focus();
+        };
+
+        $input.addEventListener("input", onInput);
+        $button.addEventListener("click", onclickButton);
+    </script>
+</body>
+</html>
