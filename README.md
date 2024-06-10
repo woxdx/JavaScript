@@ -1,1 +1,1 @@
-# Example
+# Javascript MiniProject
