@@ -53,6 +53,8 @@
 
         let clickable = true;
         let score = 0;
+        let myWin = 0;
+        let computerWin = 0;
         const clickButton = () => {
             if (clickable) {
                 clearInterval(intervalID);
@@ -67,22 +69,28 @@
                 let msg;
                 if (diff == 2 || diff === -1) {
                     // 승리
-                    score += 1;
+                    myWin += 1;
                     msg = '승리';
                 } else if (diff === -2 || diff === 1) {
                     // 패배
-                    score -= 1;
+                    computerWin += 1;
                     msg = '패배';
                 } else {
                     // 무승부
                     msg = '무승부';
                 }
-                $score.textContent = `${msg} 총: ${score}점`;
+                if (myWin === 3) {
+                    $score.textContent = `사용자의 승리 ${myWin}:${computerWin}`;
+                } else if (computerWin === 3) {
+                    $score.textContent = `컴퓨터의 승리 ${myWin}:${computerWin}`;
+                } else {
+                    $score.textContent = `${msg} ${myWin}:${computerWin}`;
            
                 setTimeout(() => {
                     clickable = true;
                     intervalID = setInterval(changeComputerHand, 50);
-                }, 1000);
+                    }, 1000);
+                }
             }
 
         };
