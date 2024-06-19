@@ -5,28 +5,30 @@
     <title>틱택토</title>
     <style>
         table {
-            border-collapse: collapse;
+            border-collapse: collapse; /* 테이블 경계를 합쳐서 중복을 없앰 */
         }
         td {
-            border: 1px solid black;
-            width: 40px;
-            height: 40px;
-            text-align: center;
+            border: 1px solid black; /* 셀 테두리를 검은색으로 지정 */
+            width: 40px; /* 셀 너비를 40픽셀로 지정 */
+            height: 40px; /* 셀 높이를 40픽셀로 지정 */
+            text-align: center; /* 텍스트를 가운데 정렬 */
         }
     </style>
 </head>
 <body>
     <script>
-        const { body } = document; // 구조분해할당
-        const $table = document.createElement('table');
-        const $div = document.createElement('div');
-        const rows = [];
-        let turn = 'O';
+        const { body } = document; // 구조분해할당으로 body 요소를 가져옴
+        const $table = document.createElement('table'); // 테이블 요소 생성
+        const $div = document.createElement('div'); // 승리 메시지 표시를 위한 div 요소 생성
+        const rows = []; // 행을 저장할 배열
+        let turn = 'O'; // 현재 턴을 저장할 변수
 
+        // 승자를 검사하는 함수
         const checkWinner = (target) => {
-            const rowIndex = target.parentNode.rowIndex;
-            const cellIndex = target.cellIndex;
+            const rowIndex = target.parentNode.rowIndex; // 클릭된 셀의 행 인덱스
+            const cellIndex = target.cellIndex; // 클릭된 셀의 열 인덱스
             let hasWinner = false; // 승자 여부
+
             // 가로줄 검사
             if (
                 rows[rowIndex][0].textContent === turn &&
@@ -59,76 +61,80 @@
             ) {
                 hasWinner = true;
             }
-            return hasWinner;
+            return hasWinner; // 승자 여부 반환
         };
 
+        // 컴퓨터의 턴을 처리하는 함수
         const computerTurn = () => {
-            let emptyCells = [];
+            let emptyCells = []; // 빈 셀을 저장할 배열
             rows.forEach((row) => {
                 row.forEach((cell) => {
                     if (!cell.textContent) {
-                        emptyCells.push(cell);
+                        emptyCells.push(cell); // 빈 셀을 배열에 추가
                     }
                 });
             });
-            const randomIndex = Math.floor(Math.random() * emptyCells.length);
-            const selectedCell = emptyCells[randomIndex];
-            selectedCell.textContent = 'X';
+            const randomIndex = Math.floor(Math.random() * emptyCells.length); // 무작위 인덱스 생성
+            const selectedCell = emptyCells[randomIndex]; // 무작위로 선택된 빈 셀
+            selectedCell.textContent = 'X'; // 선택된 셀에 'X' 표시
 
             if (checkWinner(selectedCell)) {
-                $div.textContent = `X님이 승리`;
-                $table.removeEventListener('click', callback);
+                $div.textContent = `X님이 승리`; // 승리 메시지 표시
+                $table.removeEventListener('click', callback); // 게임 종료
                 return;
             }
 
             // 무승부 처리
-            let draw = rows.flat().every((cell) => cell.textContent);
+            let draw = rows.flat().every((cell) => cell.textContent); // 모든 셀이 채워졌는지 확인
             if (draw) {
-                $div.textContent = '무승부';
+                $div.textContent = '무승부'; // 무승부 메시지 표시
                 return;
             }
-            turn = 'O'; // 컴퓨터 턴 끝나면 다시 O로
+            turn = 'O'; // 컴퓨터 턴 끝나면 다시 'O'로
         };
 
+        // 플레이어의 턴을 처리하는 함수
         const callback = (event) => {
             if (event.target.textContent !== '' || turn === 'X') {
-                // 빈 칸이 아니거나 컴퓨터 턴이면
+                // 빈 칸이 아니거나 컴퓨터 턴이면 아무것도 하지 않음
                 return;
             } else {
                 // 빈 칸이면
-                event.target.textContent = turn;
+                event.target.textContent = turn; // 현재 턴을 표시
                 if (checkWinner(event.target)) {
-                    $div.textContent = `${turn}님이 승리`;
-                    $table.removeEventListener('click', callback);
+                    $div.textContent = `${turn}님이 승리`; // 승리 메시지 표시
+                    $table.removeEventListener('click', callback); // 게임 종료
                     return;
                 }
 
                 // 무승부 처리
-                let draw = rows.flat().every((cell) => cell.textContent);
+                let draw = rows.flat().every((cell) => cell.textContent); // 모든 셀이 채워졌는지 확인
                 if (draw) {
-                    $div.textContent = '무승부';
+                    $div.textContent = '무승부'; // 무승부 메시지 표시
                     return;
                 }
-                turn = 'X'; // 컴퓨터 턴으로 변경
-                setTimeout(computerTurn, 500);
+                turn = 'X'; // 플레이어 턴 끝나면 컴퓨터 턴으로 변경
+                setTimeout(computerTurn, 500); // 0.5초 후에 컴퓨터 턴 실행
             }
         };
 
+        // 3x3 테이블 생성
         for (let i = 0; i < 3; i++) {
-            const $tr = document.createElement('tr');
-            const cells = [];
+            const $tr = document.createElement('tr'); // 행 요소 생성
+            const cells = []; // 셀을 저장할 배열
             for (let j = 0; j < 3; j++) {
-                const $td = document.createElement('td');
-                cells.push($td);
-                $tr.appendChild($td);
+                const $td = document.createElement('td'); // 셀 요소 생성
+                cells.push($td); // 배열에 셀 추가
+                $tr.appendChild($td); // 행에 셀 추가
             }
-            rows.push(cells);
-            $table.appendChild($tr);
+            rows.push(cells); // 배열에 행 추가
+            $table.appendChild($tr); // 테이블에 행 추가
         }
 
+        // 테이블에 클릭 이벤트 리스너 추가
         $table.addEventListener('click', callback);
-        body.appendChild($table);
-        body.appendChild($div);
+        body.appendChild($table); // body에 테이블 추가
+        body.appendChild($div); // body에 div 추가
     </script>
 </body>
 </html>

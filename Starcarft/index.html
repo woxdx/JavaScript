@@ -44,25 +44,25 @@
 </style>
 
 <body>
-    <h1 id='hp'>HP: 3</h1>
+    <h1 id='hp'>HP: 3</h1> <!-- HP를 표시하는 요소 -->
     <div class='background'>
-        <img id='drone' src="images/drone.png" alt="drone">
-        <img id='spit' src="images/spit.png" alt="spit">
-        <img id='bunker' src="images/bunker.png" alt="bunker">
+        <img id='drone' src="images/drone.png" alt="drone"> <!-- 드론 이미지 -->
+        <img id='spit' src="images/spit.png" alt="spit"> <!-- 침 이미지 -->
+        <img id='bunker' src="images/bunker.png" alt="bunker"> <!-- 벙커 이미지 -->
     </div>
     <script>
-        var hp = 3;
-        $("#drone").click(function() {
-            $("#spit").fadeIn();
-            $("#spit").animate({left: '+=250'});
-            $("#spit").fadeOut(function () {
-                hp = hp -1;
-                $("#hp").text("HP: " + hp);
-                if (hp === 0) {
-                    $("#bunker").fadeOut();
+        var hp = 3; // 초기 HP 설정
+        $("#drone").click(function() { // 드론 이미지를 클릭했을 때 실행
+            $("#spit").fadeIn(); // 침 이미지 나타남
+            $("#spit").animate({left: '+=250'}); // 침 이미지가 오른쪽으로 250px 이동
+            $("#spit").fadeOut(function () { // 이동 후 침 이미지 사라짐
+                hp = hp - 1; // HP 1 감소
+                $("#hp").text("HP: " + hp); // HP 텍스트 업데이트
+                if (hp === 0) { // HP가 0이 되면
+                    $("#bunker").fadeOut(); // 벙커 이미지 사라짐
                 }
             });
-            $("#spit").animate({left: '150px'});
+            $("#spit").animate({left: '150px'}); // 침 이미지 위치 초기화
         });
     </script>
 </body>

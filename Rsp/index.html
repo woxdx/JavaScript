@@ -11,28 +11,31 @@
     </style>
 </head>
 <body>
-    <div id="computer"></div>
+    <div id="computer"></div> <!-- 컴퓨터가 선택한 가위바위보를 보여주는 div -->
     <div>
-        <button id="scissors">가위</button>
-        <button id="rock">바위</button>
-        <button id="paper">보</button>
+        <button id="scissors">가위</button> <!-- 가위 버튼 -->
+        <button id="rock">바위</button> <!-- 바위 버튼 -->
+        <button id="paper">보</button> <!-- 보 버튼 -->
     </div>
-    <div id="score">0</div>
+    <div id="score">0</div> <!-- 점수를 표시하는 div -->
     <script>
-        const $computer = document.querySelector("#computer");
-        const $score = document.querySelector("#score");
-        const $scissors = document.querySelector("#scissors");
-        const $rock = document.querySelector("#rock");
-        const $paper = document.querySelector("#paper");
-        const IMG_URL = './rsp.png';
+        const $computer = document.querySelector("#computer"); // 컴퓨터 선택 div
+        const $score = document.querySelector("#score"); // 점수 div
+        const $scissors = document.querySelector("#scissors"); // 가위 버튼
+        const $rock = document.querySelector("#rock"); // 바위 버튼
+        const $paper = document.querySelector("#paper"); // 보 버튼
+        const IMG_URL = './rsp.png'; // 가위바위보 이미지 URL
 
+        // 이미지에서 각 선택의 x좌표
         const rspX = {
             scissors : "0",
             rock : "-220px",
             paper : "-440px",
         };
-        let computerChoice = "scissors";
+
+        let computerChoice = "scissors"; // 초기 컴퓨터 선택
         const changeComputerHand = () => {
+            // 컴퓨터 선택 변경
             if (computerChoice == "rock") {
                 computerChoice = "paper";
             } else if (computerChoice == "paper") {
@@ -40,32 +43,38 @@
             } else if (computerChoice == "scissors") {
                 computerChoice = "rock";
             }
+            // 컴퓨터 선택을 화면에 반영
             $computer.style.background = `url(${IMG_URL}) ${rspX[computerChoice]} 0`; // x,y 좌표
             $computer.style.backgroundSize = "auto 200px";
         };
+
+        // 50ms 마다 컴퓨터 선택 변경
         let intervalID = setInterval(changeComputerHand, 50);
 
+        // 점수 테이블
         const scoreTable = {
             scissors: 1,
             rock: 0,
             paper: -1,
         };
 
-        let clickable = true;
-        let score = 0;
-        let myWin = 0;
-        let computerWin = 0;
-        const clickButton = () => {
+        let clickable = true; // 버튼 클릭 가능 여부
+        let score = 0; // 점수
+        let myWin = 0; // 사용자 승리 횟수
+        let computerWin = 0; // 컴퓨터 승리 횟수
+
+        const clickButton = (event) => {
             if (clickable) {
-                clearInterval(intervalID);
-                clickable =false;
+                clearInterval(intervalID); // 컴퓨터 선택 변경 멈춤
+                clickable = false; // 버튼 클릭 불가
+                // 사용자의 선택을 확인
                 const myChoice = event.target.textContent === '바위'
                   ? 'rock' : event.target.textContent === '가위'
                   ? 'scissors' 
                   : "paper";
-                const myScore = scoreTable[myChoice];
-                const computerScore = scoreTable[computerChoice];
-                const diff = myScore - computerScore;
+                const myScore = scoreTable[myChoice]; // 사용자의 점수
+                const computerScore = scoreTable[computerChoice]; // 컴퓨터의 점수
+                const diff = myScore - computerScore; // 점수 차이
                 let msg;
                 if (diff == 2 || diff === -1) {
                     // 승리
@@ -79,6 +88,7 @@
                     // 무승부
                     msg = '무승부';
                 }
+                // 승리 조건 확인
                 if (myWin === 3) {
                     $score.textContent = `사용자의 승리 ${myWin}:${computerWin}`;
                 } else if (computerWin === 3) {
@@ -86,6 +96,7 @@
                 } else {
                     $score.textContent = `${msg} ${myWin}:${computerWin}`;
            
+                // 1초 후에 다시 클릭 가능하게 설정
                 setTimeout(() => {
                     clickable = true;
                     intervalID = setInterval(changeComputerHand, 50);
@@ -95,9 +106,10 @@
 
         };
 
-        $rock.addEventListener('click',clickButton);
-        $scissors.addEventListener('click',clickButton);
-        $paper.addEventListener('click',clickButton);
+        // 버튼에 클릭 이벤트 추가
+        $rock.addEventListener('click', clickButton);
+        $scissors.addEventListener('click', clickButton);
+        $paper.addEventListener('click', clickButton);
         
     </script>
     

@@ -5,56 +5,64 @@
     <title>끝말잇기</title>
 </head>
 <body>
-    <div><span id="order">1</span>번째 참가자</div>
-    <div>제시어 : <span id="word"></span></div>
-    <input type="text" />
-    <button>입력</button>
+    <div><span id="order">1</span>번째 참가자</div> <!-- 현재 참가자 번호 표시 -->
+    <div>제시어 : <span id="word"></span></div> <!-- 현재 제시어 표시 -->
+    <input type="text" /> <!-- 단어 입력 필드 -->
+    <button>입력</button> <!-- 입력 버튼 -->
     <script>
-        let number;
+        let number; // 참가자 수를 저장할 변수
         while (true) {
+            // 참가자 수를 입력받아 유효성 검사 후 number 변수에 저장
             number = Number(prompt("참가자는 몇 명인가요?"));
             if (Number.isInteger(number) && number > 0) {
-                break;
+                break; // 유효한 정수가 입력되면 루프 탈출
             }
-            alert("올바른 참가자 수를 입력하세요.");
+            alert("올바른 참가자 수를 입력하세요."); // 유효하지 않은 입력에 대한 경고
         }
 
+        // DOM 요소 선택
         const $input = document.querySelector("input");
         const $button = document.querySelector("button");
         const $word = document.querySelector("#word");
         const $order = document.querySelector("#order");
 
-        let newWord; // 사용자가 방금 입력한 단어
-        let word; // 제시어
+        let newWord; // 사용자가 방금 입력한 단어를 저장할 변수
+        let word; // 제시어를 저장할 변수
 
+        // 입력 필드에 변화가 생길 때마다 실행되는 함수
         const onInput = (event) => {
-            newWord = event.target.value;
+            newWord = event.target.value; // 입력된 값을 newWord 변수에 저장
         };
 
+        // 버튼 클릭 시 실행되는 함수
         const onclickButton = () => {
             if (newWord.length !== 3) {
+                // 입력된 단어가 세 글자가 아닐 경우 경고 메시지 표시
                 alert("세 글자 단어를 입력하세요!");
-                $input.value = '';
-                $input.focus();
+                $input.value = ''; // 입력 필드 초기화
+                $input.focus(); // 입력 필드에 포커스
                 return;
             }
 
-            if (!word || (word.at(-1) === newWord[0])) { // 제시어가 비어있다면 -> 첫 번째
-                word = newWord;
-                $word.textContent = word;
-                const order = Number($order.textContent);
+            if (!word || (word.at(-1) === newWord[0])) {
+                // 제시어가 비어있거나 제시어의 마지막 글자와 새 단어의 첫 글자가 일치할 경우
+                word = newWord; // 새 단어를 제시어로 설정
+                $word.textContent = word; // 제시어를 화면에 표시
+                const order = Number($order.textContent); // 현재 참가자 번호를 가져옴
                 if (order + 1 > number) {
-                    $order.textContent = 1; // 마지막 번호 참가자
+                    $order.textContent = 1; // 마지막 참가자 이후에는 다시 첫 번째 참가자로
                 } else {
-                    $order.textContent = order + 1;
+                    $order.textContent = order + 1; // 다음 참가자로
                 }
-            } else { // 제시어에 뭔가 있다면 -> n 번째
+            } else {
+                // 제시어의 마지막 글자와 새 단어의 첫 글자가 일치하지 않을 경우 경고 메시지 표시
                 alert("틀린 단어입니다!");
             }
-            $input.value = '';
-            $input.focus();
+            $input.value = ''; // 입력 필드 초기화
+            $input.focus(); // 입력 필드에 포커스
         };
 
+        // 입력 필드와 버튼에 이벤트 리스너 추가
         $input.addEventListener("input", onInput);
         $button.addEventListener("click", onclickButton);
     </script>

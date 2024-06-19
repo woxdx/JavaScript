@@ -5,28 +5,39 @@
     <title>숫자야구</title>
 </head>
 <body>
+    <!-- 사용자 입력 폼 -->
     <form id="form">
         <input type="text" id="input">
         <button>확인</button>
     </form>
+    
+    <!-- 로그 출력 창 -->
     <div id="logs"></div>
+    
     <script>
+        // DOM 요소들을 가져옵니다.
         const $input = document.querySelector("#input");
         const $form = document.querySelector("#form");
         const $logs = document.querySelector("#logs");
 
+        // 1부터 9까지의 숫자 배열을 생성합니다.
         const numbers = [];
-        for (let n=1; n<10; n+=1) {
+        for (let n = 1; n < 10; n += 1) {
             numbers.push(n);
         }
-        const answer = []; // 컴퓨터가 정한 답
-        for (let n=0; n<=3; n+=1) {
-            const index = Math.floor(Math.random() * numbers.length); // 0~8
-            answer.push(numbers[index]);
-            numbers.splice(index, 1);
+
+        // 컴퓨터가 정한 4자리 답을 생성합니다.
+        const answer = [];
+        for (let n = 0; n <= 3; n += 1) {
+            const index = Math.floor(Math.random() * numbers.length); // 0~8 사이의 인덱스 선택
+            answer.push(numbers[index]); // 선택된 숫자를 정답에 추가
+            numbers.splice(index, 1); // 선택된 숫자를 숫자 배열에서 제거
         }
-        console.log(answer);
-        const tries = []; // 사용자가 그 동안 입력 답
+
+        // 시도한 값들을 기록하는 배열입니다.
+        const tries = [];
+
+        // 사용자 입력이 유효한지 확인하는 함수입니다.
         function checkInput(input) {
             if (input.length !== 4) {
                 return alert("4자리 숫자를 입력하세요");
@@ -40,48 +51,63 @@
             return true;
         }
 
+        // 아웃 횟수를 초기화합니다.
         let out = 0;
+
+        // 폼 제출 이벤트 리스너입니다.
         $form.addEventListener("submit", (event) => {
-            event.preventDefault();
-            const value = $input.value;
-            $input.value = "";
-            if (!checkInput(value)){
+            event.preventDefault(); // 기본 동작(폼 제출)을 막습니다.
+            const value = $input.value; // 입력된 값
+            $input.value = ""; // 입력 필드를 초기화합니다.
+
+            // 입력 값이 유효하지 않으면 함수를 종료합니다.
+            if (!checkInput(value)) {
                 return;
             }
+
+            // 정답을 맞춘 경우
             if (answer.join("") == value) {
                 $logs.textContent = "홈런";
                 return;
             }
+
+            // 시도 횟수가 9번을 초과한 경우 패배 메시지를 출력합니다.
             if (tries.length >= 9) {
                 const msg = document.createTextNode(`패배! 정답은 ${answer.join("")}`);
                 $logs.appendChild(msg);
                 return;
             }
-            // 몇 스트라이크 , 몇 볼인지 검사
+
+            // 스트라이크와 볼을 검사합니다.
             let strike = 0;
             let ball = 0;
-            for (let i=0; i<answer.length; i++) {
-                const index =  value.indexOf(answer[i]);
-                if(index > -1) {
-                    if(index === i) { // 값/위치 같음
+            for (let i = 0; i < answer.length; i++) {
+                const index = value.indexOf(answer[i]);
+                if (index > -1) {
+                    if (index === i) { // 값과 위치가 모두 일치하는 경우 스트라이크
                         strike += 1;
-                    } else {
+                    } else { // 값은 일치하지만 위치가 다른 경우 볼
                         ball += 1;
                     }
                 }
             }
+
+            // 스트라이크와 볼에 따라 로그를 출력합니다.
             if (strike === 0 && ball === 0) {
                 out++;
-                $logs.append(`${value}:아웃` , document.createElement('br'));
+                $logs.append(`${value}: 아웃`, document.createElement('br'));
             } else {
-                $logs.append(`${value} : ${strike}스트라이크 ${ball}볼` , document.createElement('br'));
+                $logs.append(`${value}: ${strike}스트라이크 ${ball}볼`, document.createElement('br'));
             }
+
+            // 아웃 횟수가 3회 이상이면 패배 메시지를 출력합니다.
             if (out === 3) {
                 const message = document.createTextNode(`패배! 정답은 ${answer.join("")}`);
                 $logs.appendChild(message);
                 return;
             }
-            tries.push(value); // 사용자 입력한 값 누적
+
+            tries.push(value); // 시도한 값 배열에 사용자 입력을 추가합니다.
         });
 
     </script>
